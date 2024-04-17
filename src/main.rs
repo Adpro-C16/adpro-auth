@@ -17,7 +17,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();
     let url = env::var("DATABASE_URL").expect("DATABASE_URL must be set.");
 
-    let pool = PgPoolOptions::new().connect(&url).await?;
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&url)
+        .await?;
 
     // let allowed_origins = AllowedOrigins::some_exact(&["https://www.heymart-c14.com"]);
 
