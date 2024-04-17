@@ -14,10 +14,15 @@ pub mod typing;
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore) -> ShuttleRocket {
-    dotenv().ok();
     // let url = env::var("DATABASE_URL").expect("DATABASE_URL must be set.");
 
     let url = secrets.get("DATABASE_URL").unwrap();
+
+    secrets.into_iter().for_each(|(key, value)| {
+        std::env::set_var(key, value);
+    });
+
+    dotenv().ok();
 
     let pool = PgPoolOptions::new()
         .max_connections(5)
