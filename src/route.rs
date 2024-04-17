@@ -135,3 +135,8 @@ pub async fn get_user(
     let response = serde_json::to_string(&user).unwrap();
     return Ok(serde_json::to_string(&response).unwrap());
 }
+
+#[get("/")]
+pub fn index() -> &'static str {
+    "Heymart C14 - Auth Service"
+}

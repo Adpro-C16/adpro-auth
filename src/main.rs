@@ -45,7 +45,7 @@ async fn main(#[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore)
             "/auth",
             routes![route::login, route::register, route::authorize],
         )
-        .mount("/", routes![route::get_user]);
+        .mount("/", routes![route::get_user, route::index]);
 
     Ok(rocket.into())
 }
