@@ -6,7 +6,7 @@ use uuid::Uuid;
 
 use crate::{
     guard::{create_jwt, JWT},
-    model::{Role, User},
+    model::user::Role,
     typing::{
         LoginRequest, NetworkResponse, RegisterRequest, RegisterResponse, Response, ResponseBody,
     },
@@ -108,35 +108,4 @@ pub async fn authorize(
         Ok(_) => return Ok("Authorized".to_string()),
         Err(_) => return Err(NetworkResponse::BadRequest("Database error.".to_string())),
     };
-}
-
-#[get("/user")]
-pub async fn get_user(
-    pool: &State<Pool<Postgres>>,
-    key: Result<JWT, NetworkResponse>,
-) -> Result<String, NetworkResponse> {
-    let key = key?;
-    let result = match sqlx::query!(
-        "SELECT id, username, email, role FROM users WHERE id = $1",
-        Uuid::parse_str(&key.claims.id).unwrap()
-    )
-    .fetch_one(&pool.inner().clone())
-    .await
-    {
-        Ok(result) => result,
-        Err(_) => return Err(NetworkResponse::BadRequest("Database error.".to_string())),
-    };
-    let user = User {
-        id: result.id.to_string(),
-        username: result.username,
-        email: result.email,
-        role: Role::User,
-    };
-    let response = serde_json::to_string(&user).unwrap();
-    return Ok(serde_json::to_string(&response).unwrap());
-}
-
-#[get("/")]
-pub fn index() -> &'static str {
-    "Heymart C14 - Auth Service"
 }

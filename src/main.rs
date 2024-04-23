@@ -43,9 +43,13 @@ async fn main(#[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore)
         // .attach(cors)
         .mount(
             "/auth",
-            routes![route::login, route::register, route::authorize],
+            routes![
+                route::auth::login,
+                route::auth::register,
+                route::auth::authorize
+            ],
         )
-        .mount("/", routes![route::get_user, route::index]);
+        .mount("/", routes![route::user::get_user, route::user::index]);
 
     Ok(rocket.into())
 }
