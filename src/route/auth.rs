@@ -40,7 +40,7 @@ pub async fn login(
             "Wrong username / password.".to_string(),
         ));
     }
-    let token = create_jwt(result.id.to_string(), result.role.to_string()).unwrap();
+    let token = create_jwt(result.id, result.role.to_string()).unwrap();
     let response = Response {
         body: ResponseBody::AuthToken(token),
     };
@@ -72,8 +72,7 @@ pub async fn register(
     let salt = env::var("SALT").unwrap();
     let hash = argon2::hash_encoded(data.password.as_bytes(), salt.as_bytes(), &config).unwrap();
     let _ = match sqlx::query!(
-        "INSERT INTO users (id, username, email, password, role) VALUES ($1, $2, $3, $4, $5)",
-        Uuid::new_v4(),
+        "INSERT INTO users (username, email, password, role) VALUES ($1, $2, $3, $4)",
         data.username,
         data.email,
         hash,
@@ -98,12 +97,9 @@ pub async fn authorize(
     key: Result<JWT, NetworkResponse>,
 ) -> Result<String, NetworkResponse> {
     let key = key?;
-    match sqlx::query!(
-        "SELECT id FROM users WHERE id = $1",
-        Uuid::parse_str(&key.claims.id).unwrap()
-    )
-    .fetch_one(&pool.inner().clone())
-    .await
+    match sqlx::query!("SELECT id FROM users WHERE id = $1", key.claims.id)
+        .fetch_one(&pool.inner().clone())
+        .await
     {
         Ok(_) => return Ok("Authorized".to_string()),
         Err(_) => return Err(NetworkResponse::BadRequest("Database error.".to_string())),

@@ -13,7 +13,7 @@ use crate::typing::{NetworkResponse, Response, ResponseBody};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Claims {
-    pub id: String,
+    pub id: i32,
     pub role: String,
     exp: usize,
 }
@@ -93,7 +93,7 @@ impl<'r> FromRequest<'r> for JWT {
     }
 }
 
-pub fn create_jwt(id: String, role: String) -> Result<String, Error> {
+pub fn create_jwt(id: i32, role: String) -> Result<String, Error> {
     let expiration = Utc::now()
         .checked_add_signed(chrono::Duration::hours(1))
         .expect("Invalid timestamp")

@@ -1,6 +1,5 @@
 use rocket::State;
 use sqlx::{Pool, Postgres};
-use uuid::Uuid;
 
 use crate::{
     guard::JWT,
@@ -16,7 +15,7 @@ pub async fn get_user(
     let key = key?;
     let result = match sqlx::query!(
         "SELECT id, username, email, role FROM users WHERE id = $1",
-        Uuid::parse_str(&key.claims.id).unwrap()
+        &key.claims.id
     )
     .fetch_one(&pool.inner().clone())
     .await
@@ -25,7 +24,7 @@ pub async fn get_user(
         Err(_) => return Err(NetworkResponse::BadRequest("Database error.".to_string())),
     };
     let user = User {
-        id: result.id.to_string(),
+        id: result.id,
         username: result.username,
         email: result.email,
         role: Role::User,

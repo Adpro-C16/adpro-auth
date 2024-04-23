@@ -25,7 +25,7 @@ async fn main(#[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore)
     dotenv().ok();
 
     let pool = PgPoolOptions::new()
-        .max_connections(5)
+        .max_connections(4)
         .connect(&url)
         .await
         .unwrap();
