@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use crate::{
     guard::JWT,
-    model::{Role, User},
+    model::user::{Role, User},
     typing::NetworkResponse,
 };
 
