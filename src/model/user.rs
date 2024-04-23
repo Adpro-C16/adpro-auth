@@ -22,4 +22,5 @@ pub struct User {
     pub username: String,
     pub email: String,
     pub role: Role,
+    pub balance: i32,
 }

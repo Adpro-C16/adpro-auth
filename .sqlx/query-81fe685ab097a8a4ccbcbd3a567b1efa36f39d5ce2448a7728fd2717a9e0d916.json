@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT id, username, email, role FROM users WHERE id = $1",
+  "query": "SELECT id, username, email, role, balance FROM users WHERE id = $1",
   "describe": {
     "columns": [
       {
@@ -22,6 +22,11 @@
         "ordinal": 3,
         "name": "role",
         "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "balance",
+        "type_info": "Int4"
       }
     ],
     "parameters": {
@@ -33,8 +38,9 @@
       false,
       false,
       false,
-      false
+      false,
+      true
     ]
   },
-  "hash": "558c68fae031acafea6311623bed52277e03c260fc61ac087c57081af7cef9e6"
+  "hash": "81fe685ab097a8a4ccbcbd3a567b1efa36f39d5ce2448a7728fd2717a9e0d916"
 }

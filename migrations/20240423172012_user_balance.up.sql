@@ -1,0 +1,2 @@
+ALTER TABLE "users"
+ADD COLUMN balance INTEGER DEFAULT 0;
