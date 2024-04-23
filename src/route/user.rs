@@ -1,4 +1,4 @@
-use rocket::State;
+use rocket::{serde::json::Json, State};
 use sqlx::{Pool, Postgres};
 
 use crate::{
@@ -11,10 +11,10 @@ use crate::{
 pub async fn get_user(
     pool: &State<Pool<Postgres>>,
     key: Result<JWT, NetworkResponse>,
-) -> Result<String, NetworkResponse> {
+) -> Result<Json<User>, NetworkResponse> {
     let key = key?;
     let result = match sqlx::query!(
-        "SELECT id, username, email, role FROM users WHERE id = $1",
+        "SELECT id, username, email, role, balance FROM users WHERE id = $1",
         &key.claims.id
     )
     .fetch_one(&pool.inner().clone())
@@ -28,9 +28,9 @@ pub async fn get_user(
         username: result.username,
         email: result.email,
         role: Role::User,
+        balance: result.balance.unwrap_or(0),
     };
-    let response = serde_json::to_string(&user).unwrap();
-    return Ok(serde_json::to_string(&response).unwrap());
+    return Ok(Json(user));
 }
 
 #[get("/")]
