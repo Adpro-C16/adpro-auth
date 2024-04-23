@@ -2,7 +2,6 @@ use argon2::Config;
 use rocket::{serde::json::Json, State};
 use sqlx::{Pool, Postgres};
 use std::env;
-use uuid::Uuid;
 
 use crate::{
     guard::{create_jwt, JWT},
