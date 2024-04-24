@@ -12,6 +12,11 @@ pub mod model;
 pub mod route;
 pub mod typing;
 
+#[get("/")]
+pub fn index() -> &'static str {
+    "Heymart C14 - Auth Service"
+}
+
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore) -> ShuttleRocket {
     // let url = env::var("DATABASE_URL").expect("DATABASE_URL must be set.");
@@ -46,10 +51,18 @@ async fn main(#[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore)
             routes![
                 route::auth::login,
                 route::auth::register,
-                route::auth::authorize
+                route::auth::authorize,
             ],
         )
-        .mount("/", routes![route::user::get_user, route::user::index]);
+        .mount(
+            "/user",
+            routes![
+                route::user::get_user,
+                route::user::update_balance,
+                route::user::topup_balance
+            ],
+        )
+        .mount("/", routes![index]);
 
     Ok(rocket.into())
 }
