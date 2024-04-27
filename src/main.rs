@@ -2,9 +2,9 @@
 extern crate rocket;
 
 use dotenvy::dotenv;
+use rocket_cors::AllowedOrigins;
 use shuttle_rocket::ShuttleRocket;
 use sqlx::postgres::PgPoolOptions;
-// use rocket_cors::AllowedOrigins;
 // use std::env;
 
 pub mod guard;
@@ -35,17 +35,18 @@ async fn main(#[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore)
         .await
         .unwrap();
 
-    // let allowed_origins = AllowedOrigins::some_exact(&["https://www.heymart-c14.com"]);
+    let allowed_origins = AllowedOrigins::all();
 
-    // let cors = rocket_cors::CorsOptions {
-    //     allowed_origins,
-    //     ..Default::default()
-    // }
-    // .to_cors()?;
+    let cors = rocket_cors::CorsOptions {
+        allowed_origins,
+        ..Default::default()
+    }
+    .to_cors()
+    .unwrap();
 
     let rocket = rocket::build()
         .manage(pool)
-        // .attach(cors)
+        .attach(cors)
         .mount(
             "/auth",
             routes![
