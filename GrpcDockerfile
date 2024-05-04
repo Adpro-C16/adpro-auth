@@ -28,5 +28,5 @@ COPY --from=builder /app/target/release/grpc-auth /app/grpc-auth
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 WORKDIR /app
 
-EXPOSE 50051
+EXPOSE 8080
 CMD ["./grpc-auth"]

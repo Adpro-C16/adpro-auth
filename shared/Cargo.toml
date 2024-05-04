@@ -19,8 +19,6 @@ chrono = "0.4"
 jsonwebtoken = "9"
 rust-argon2 = "2.1.0"
 rocket_cors = "0.6.0"
-shuttle-rocket = "0.43.0"
-shuttle-runtime = "0.43.0"
 
 [dependencies.uuid]
 version = "1.8.0"
