@@ -24,9 +24,9 @@ FROM gcr.io/distroless/cc-debian11 AS runner
 COPY --from=builder /target/release/rest-auth /rest-auth
 
 ENV ROCKET_ADDRESS=0.0.0.0
-ENV ROCKET_PORT=8000
+ENV ROCKET_PORT=8080
 
 # WORKDIR /app
-EXPOSE 8000
+EXPOSE 8080
 # RUN chmod +x /rest-auth
 CMD ["/rest-auth"]
