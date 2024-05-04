@@ -3,6 +3,7 @@ name: Continous Deployment [gRPC] (CD)
 on:
   push:
     branches:
+      - main
       - master
 
 jobs:

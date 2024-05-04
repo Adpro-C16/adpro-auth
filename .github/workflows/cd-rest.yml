@@ -3,6 +3,7 @@ name: Continous Deployment [REST] (CD)
 on:
   push:
     branches:
+      - main
       - master
 
 jobs:
