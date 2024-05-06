@@ -4,6 +4,7 @@ package services;
 
 service AuthService {
     rpc verify(VerifyRequest) returns (VerifyResponse) {}
+    // rpc check_role(CheckRoleRequest) returns (CheckRoleResponse) {}
 }
 
 message VerifyRequest {
@@ -13,3 +14,11 @@ message VerifyRequest {
 message VerifyResponse {
     bool is_valid = 1;
 }
+
+// message CheckRoleRequest {
+//     string token = 1;
+// }
+
+// message CheckRoleResponse {
+//     bool is_valid = 1;
+// }

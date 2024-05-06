@@ -35,8 +35,6 @@ pub struct RegisterResponse {
     pub body: String,
 }
 
-pub type DBResult<T, E = rocket::response::Debug<sqlx::Error>> = std::result::Result<T, E>;
-
 #[derive(Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct LoginRequest<'r> {
