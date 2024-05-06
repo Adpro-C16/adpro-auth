@@ -27,7 +27,7 @@ pub struct JWT {
 }
 
 fn is_valid(key: &str) -> Result<Claims, Error> {
-    Ok(decode_jwt(String::from(key))?)
+    Ok(decode_jwt(key)?)
 }
 
 pub fn verify_token(token: &str) -> Result<Claims, String> {
@@ -103,7 +103,7 @@ pub fn create_jwt(id: i32, role: String) -> Result<String, Error> {
     )
 }
 
-pub fn decode_jwt(token: String) -> Result<Claims, ErrorKind> {
+pub fn decode_jwt(token: &str) -> Result<Claims, ErrorKind> {
     dotenv().ok();
     let token = token.trim_start_matches("Bearer").trim();
     let secret = env::var("SECRET_KEY").expect("JWT_SECRET must be set.");
