@@ -11,7 +11,7 @@ pub mod auth;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    let addr = "0.0.0.0:50051".parse().unwrap();
+    let addr = "0.0.0.0:8080".parse().unwrap();
     let auth_service = MyAuthService::default();
 
     println!("Server listening on {}", addr);

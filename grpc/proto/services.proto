@@ -3,8 +3,27 @@ syntax = "proto3";
 package services;
 
 service AuthService {
-    rpc verify(VerifyRequest) returns (VerifyResponse) {}
-    // rpc check_role(CheckRoleRequest) returns (CheckRoleResponse) {}
+    rpc verify_auth(VerifyRequest) returns (VerifyResponse) {}
+    rpc verify_access(RBACRequest) returns (RBACResponse) {}
+    rpc get_claims(ClaimsRequest) returns (ClaimsResponse) {}
+}
+
+message ClaimsRequest {
+    string token = 1;
+}
+
+message ClaimsResponse {
+    int32 user_id = 1;
+    string role = 2;
+}
+
+message RBACRequest {
+    string token = 1;
+    string role = 2;
+}
+
+message RBACResponse {
+    bool is_valid = 1;
 }
 
 message VerifyRequest {
