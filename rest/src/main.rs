@@ -48,14 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .manage(pool)
         .attach(cors)
         .mount("/auth", routes![route::auth::login, route::auth::register,])
-        .mount(
-            "/user",
-            routes![
-                route::user::get_user,
-                route::user::update_balance,
-                route::user::topup_balance
-            ],
-        )
+        .mount("/user", routes![route::user::get_user,])
         .mount("/", routes![index]);
 
     rocket.launch().await?;
