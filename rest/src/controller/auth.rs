@@ -1,4 +1,5 @@
 use argon2::Config;
+use autometrics::autometrics;
 use rocket::{serde::json::Json, State};
 use sqlx::{Pool, Postgres};
 use std::env;
@@ -10,6 +11,7 @@ use shared::typing::{
 };
 
 #[post("/login", data = "<user>", format = "application/json")]
+#[autometrics]
 pub async fn login(
     pool: &State<Pool<Postgres>>,
     user: Json<LoginRequest<'_>>,
@@ -45,6 +47,7 @@ pub async fn login(
 }
 
 #[post("/register", data = "<data>", format = "application/json")]
+#[autometrics]
 pub async fn register(
     pool: &State<Pool<Postgres>>,
     data: Json<RegisterRequest<'_>>,
@@ -87,18 +90,3 @@ pub async fn register(
         Err(_) => return Err(NetworkResponse::BadRequest("Database error.".to_string())),
     };
 }
-
-// #[post("/verify")]
-// pub async fn authorize(
-//     pool: &State<Pool<Postgres>>,
-//     key: Result<JWT, NetworkResponse>,
-// ) -> Result<String, NetworkResponse> {
-//     let key = key?;
-//     match sqlx::query!("SELECT id FROM users WHERE id = $1", key.claims.id)
-//         .fetch_one(&pool.inner().clone())
-//         .await
-//     {
-//         Ok(_) => return Ok("Authorized".to_string()),
-//         Err(_) => return Err(NetworkResponse::BadRequest("Database error.".to_string())),
-//     };
-// }

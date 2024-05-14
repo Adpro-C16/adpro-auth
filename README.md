@@ -114,10 +114,13 @@ Endpoint to get user details.
     }
     ```
 
-## gRPC (WIP)
+## gRPC
 
-### /verify
+### AuthService
+- verify_role()
+- get_claims()
+- verify_auth()
 
-### /balance
+### UserService
+- update_balance()
 
-### /topup

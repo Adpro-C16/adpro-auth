@@ -1,3 +1,4 @@
+use autometrics::autometrics;
 use rocket::{serde::json::Json, State};
 use sqlx::{Pool, Postgres};
 
@@ -5,13 +6,8 @@ use crate::model::user::{Role, User};
 use shared::typing::NetworkResponse;
 use shared::JWT;
 
-#[derive(serde::Deserialize)]
-#[serde(crate = "rocket::serde")]
-pub struct BalanceRequest {
-    amount: i32,
-}
-
 #[get("/")]
+#[autometrics]
 pub async fn get_user(
     pool: &State<Pool<Postgres>>,
     key: Result<JWT, NetworkResponse>,
