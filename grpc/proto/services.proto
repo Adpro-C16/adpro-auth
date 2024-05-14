@@ -8,6 +8,26 @@ service AuthService {
     rpc get_claims(ClaimsRequest) returns (ClaimsResponse) {}
 }
 
+service UserService {
+    rpc update_balance(UpdateBalanceRequest) returns (UpdateBalanceResponse) {}
+}
+
+enum TransactionType {
+    DEPOSIT = 0;
+    WITHDRAW = 1;
+}
+
+message UpdateBalanceRequest {
+    string token = 1;
+    int32 amount = 2;
+    TransactionType transaction_type = 3;
+}
+
+message UpdateBalanceResponse {
+    bool success = 1;
+    int32 new_balance = 2;
+}
+
 message ClaimsRequest {
     string token = 1;
 }
