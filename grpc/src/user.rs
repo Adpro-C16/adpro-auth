@@ -1,3 +1,4 @@
+use autometrics::autometrics;
 use shared::verify_token;
 use tonic::{Request, Response, Status};
 
@@ -10,6 +11,7 @@ pub struct MyUserService {
 }
 
 #[tonic::async_trait]
+#[autometrics]
 impl UserService for MyUserService {
     async fn update_balance(
         &self,

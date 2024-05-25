@@ -2,12 +2,14 @@ use crate::services::{
     auth_service_server::AuthService, ClaimsRequest, ClaimsResponse, RbacRequest, RbacResponse,
     VerifyRequest, VerifyResponse,
 };
+use autometrics::autometrics;
 use shared::{decode_jwt, verify_token};
 
 #[derive(Default)]
 pub struct MyAuthService;
 
 #[tonic::async_trait]
+#[autometrics]
 impl AuthService for MyAuthService {
     async fn verify_auth(
         &self,

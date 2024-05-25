@@ -1,18 +1,26 @@
 #[macro_use]
 extern crate rocket;
 
+use autometrics::prometheus_exporter;
 use dotenvy::dotenv;
 use rocket_cors::AllowedOrigins;
 // use shuttle_rocket::ShuttleRocket;
+
 use sqlx::postgres::PgPoolOptions;
 use std::env;
 
+pub mod controller;
+
 pub mod model;
-pub mod route;
 
 #[get("/")]
 pub fn index() -> &'static str {
     "Heymart C14 - Auth Service"
+}
+
+#[get("/metrics")]
+pub fn metrics() -> String {
+    prometheus_exporter::encode_to_string().unwrap()
 }
 
 // #[shuttle_runtime::main]
@@ -20,6 +28,8 @@ pub fn index() -> &'static str {
 #[rocket::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
+
+    prometheus_exporter::init();
 
     let url = env::var("DATABASE_URL").expect("DATABASE_URL must be set.");
 
@@ -47,16 +57,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rocket = rocket::build()
         .manage(pool)
         .attach(cors)
-        .mount("/auth", routes![route::auth::login, route::auth::register,])
         .mount(
-            "/user",
-            routes![
-                route::user::get_user,
-                route::user::update_balance,
-                route::user::topup_balance
-            ],
+            "/auth",
+            routes![controller::auth::login, controller::auth::register,],
         )
-        .mount("/", routes![index]);
+        .mount("/user", routes![controller::user::get_user,])
+        .mount("/", routes![index, metrics]);
 
     rocket.launch().await?;
 
