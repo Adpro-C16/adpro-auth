@@ -32,3 +32,40 @@ pub async fn get_user(
     };
     return Ok(Json(user));
 }
+
+#[derive(serde::Deserialize)]
+struct TopupDTO {
+    amount: i32,
+}
+
+#[post("/topup", data = "<body>")]
+#[autometrics]
+pub async fn topup(
+    pool: &State<Pool<Postgres>>,
+    key: Result<JWT, NetworkResponse>,
+    body: Json<TopupDTO>,
+) -> Result<Json<User>, NetworkResponse> {
+    let key = key?;
+    if body.amount <= 0 {
+        return Err(NetworkResponse::BadRequest("Invalid amount.".to_string()));
+    }
+    let result = match sqlx::query!(
+        "UPDATE users SET balance = balance + $1 WHERE id = $2 RETURNING id, username, email, role, balance",
+        body.amount,
+        &key.claims.id
+    )
+    .fetch_one(&pool.inner().clone())
+    .await
+    {
+        Ok(result) => result,
+        Err(_) => return Err(NetworkResponse::BadRequest("Database error.".to_string())),
+    };
+    let user = User {
+        id: result.id,
+        username: result.username,
+        email: result.email,
+        role: Role::User,
+        balance: result.balance.unwrap_or(0),
+    };
+    return Ok(Json(user));
+}
