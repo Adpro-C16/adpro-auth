@@ -4,14 +4,14 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub enum Role {
-    AdminUser,
+    Admin,
     User,
 }
 
 impl fmt::Display for Role {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Role::AdminUser => write!(f, "Admin"),
+            Role::Admin => write!(f, "Admin"),
             Role::User => write!(f, "User"),
         }
     }
@@ -20,7 +20,7 @@ impl fmt::Display for Role {
 impl From<&str> for Role {
     fn from(s: &str) -> Self {
         match s {
-            "Admin" => Role::AdminUser,
+            "Admin" => Role::Admin,
             _ => Role::User,
         }
     }
