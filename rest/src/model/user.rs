@@ -11,11 +11,21 @@ pub enum Role {
 impl fmt::Display for Role {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Role::AdminUser => write!(f, "ADMIN"),
-            Role::User => write!(f, "USER"),
+            Role::AdminUser => write!(f, "Admin"),
+            Role::User => write!(f, "User"),
         }
     }
 }
+
+impl From<&str> for Role {
+    fn from(s: &str) -> Self {
+        match s {
+            "Admin" => Role::AdminUser,
+            _ => Role::User,
+        }
+    }
+}
+
 #[derive(Serialize)]
 pub struct User {
     pub id: i32,

@@ -27,7 +27,7 @@ pub async fn get_user(
         id: result.id,
         username: result.username,
         email: result.email,
-        role: Role::User,
+        role: Role::from(result.role.as_str()),
         balance: result.balance.unwrap_or(0),
     };
     return Ok(Json(user));
