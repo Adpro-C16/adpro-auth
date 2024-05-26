@@ -1,0 +1,47 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE users SET balance = balance + $1 WHERE id = $2 RETURNING id, username, email, role, balance",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "role",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "balance",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "b4efdd5fb751a710bd6b315bd54caf58e9a633bdbfa589a941ebaa11ab99f8bf"
+}
