@@ -3,7 +3,7 @@ use shared::verify_token;
 use tonic::{Request, Response, Status};
 
 use crate::services::{
-    user_service_server::UserService, UpdateBalanceRequest, UpdateBalanceResponse,
+    user_service_server::UserService, TransactionType, UpdateBalanceRequest, UpdateBalanceResponse,
 };
 
 pub struct MyUserService {
@@ -27,8 +27,8 @@ impl UserService for MyUserService {
             return Err(Status::invalid_argument("Invalid amount.".to_string()));
         }
 
-        match body.transaction_type {
-            0 => {
+        match TransactionType::try_from(body.transaction_type).unwrap() {
+            TransactionType::Withdraw => {
                 let user = sqlx::query!("SELECT balance FROM users WHERE id = $1", claims.id)
                     .fetch_one(&self.pool.clone())
                     .await
@@ -54,7 +54,7 @@ impl UserService for MyUserService {
                     new_balance: result.balance.unwrap_or_else(|| 0),
                 }));
             }
-            1 => {
+            TransactionType::Deposit => {
                 // Add balance
                 let result = match sqlx::query!(
                     "UPDATE users SET balance = balance + $1 WHERE id = $2 RETURNING balance",
@@ -71,9 +71,6 @@ impl UserService for MyUserService {
                     success: true,
                     new_balance: result.balance.unwrap_or_else(|| 0),
                 }));
-            }
-            _ => {
-                return Err(Status::invalid_argument("Invalid type.".to_string()));
             }
         }
     }
