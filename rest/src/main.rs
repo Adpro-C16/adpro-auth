@@ -61,7 +61,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/auth",
             routes![controller::auth::login, controller::auth::register,],
         )
-        .mount("/user", routes![controller::user::get_user,])
+        .mount(
+            "/user",
+            routes![controller::user::get_user, controller::user::topup,],
+        )
         .mount("/", routes![index, metrics]);
 
     rocket.launch().await?;
